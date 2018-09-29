@@ -11,8 +11,6 @@
 
 unsigned char* create_magic_packet(unsigned char* mac, unsigned char* packet){
 
-    unsigned char test[6];
-
     // pad first 6 bytes
     for(int i = 0; i < 6; i++){
         packet[i] = 0xFF;
@@ -20,23 +18,8 @@ unsigned char* create_magic_packet(unsigned char* mac, unsigned char* packet){
 
     // need to append to the packet 16 times 
     for(int i = 1; i <= 16; i++){
-        memcpy(&packet[i * 6], &mac, 6 * sizeof(char));
-        printf("\n");
+        memcpy(&packet[i * 6], mac, 6 * sizeof(char));
     }
-
-    for(int i = 0; i < 6; i++){
-        if(i == 5){
-            printf("%x\n", mac[i]);
-        }
-        else{
-            printf("%x:", mac[i]);      
-        }
-    }
-
-    for(int i = 0; i < MAGICPACKET_SIZE; i += sizeof(char)){
-        printf("%x:", packet[i]);      
-    }
-    printf("\n");
 
     return packet;
 }
@@ -98,13 +81,11 @@ int main(int argc, char **argv)
         //Scan all the inputs. This should be done once for each frame
         hidScanInput();
 
-        // Your code goes here
-
         //hidKeysDown returns information about which buttons have been just pressed (and they weren't in the previous frame)
         u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
 
         if (kDown & KEY_A){
-            sendto(sock, &magic_packet, sizeof(unsigned char) * MAGICPACKET_SIZE, 0, 
+            sendto(sock, magic_packet, sizeof(unsigned char) * MAGICPACKET_SIZE, 0, 
                    (struct sockaddr*)&server, sizeof(server));
             printf("Sending magic packet to ");
             for(int i = 0; i < 6; i++){
