@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     consoleInit(NULL);
     socketInitializeDefault();
 
-    printf("Hello World!\n");
+    printf("Press A to send a magic packet.\n");
 
     unsigned char* magic_packet = create_magic_packet(mac, packet);
 
