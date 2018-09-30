@@ -7,6 +7,8 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
+#include "config.h"
+
 #define MAGICPACKET_SIZE 102
 
 unsigned char* create_magic_packet(unsigned char* mac, unsigned char* packet){
