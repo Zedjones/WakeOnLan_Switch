@@ -6,6 +6,7 @@
 #define _CONFIG_HEADER_
 
 #define CONFIG_FILE "./configurations"
+#define MAX_LINE 1024
 
 typedef struct WoLConfig_t {
     char* broadcast_address;

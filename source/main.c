@@ -38,6 +38,8 @@ int main(int argc, char **argv)
 
     printf("Press A to send a magic packet.\n");
 
+    get_configs();
+
     unsigned char* magic_packet = create_magic_packet(mac, packet);
 
     int sock;
