@@ -15,8 +15,13 @@ WolConfigs* get_configs(){
         return NULL;
     }
 
+    char key[10];
+    char value[16];
+
     while(getline(&line, &len, config_file) != -1){
         printf("%s\n", line);
+        sscanf(line, "%s: %s", key, value);
+        printf("%s: %s", key, value);
     }
 
     free(line);
