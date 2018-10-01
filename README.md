@@ -1,4 +1,4 @@
-# WoL_Switch ![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)
+# WakeOnLAN_Switch ![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)
 
 A very basic [Wake-on-LAN](https://en.wikipedia.org/wiki/Wake-on-LAN) client for the Nintendo Switch written using [libnx](https://github.com/switchbrew/libnx). 
 
