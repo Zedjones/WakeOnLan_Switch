@@ -7,6 +7,7 @@
 
 #define CONFIG_FILE "./configurations"
 #define MAX_LINE 1024
+#define STARTING_CAPACITY 5
 
 typedef struct WoLConfig_t {
     char* broadcast_address;
@@ -14,10 +15,20 @@ typedef struct WoLConfig_t {
     int udp_port; 
 } WolConfig; 
 
-WolConfig** get_configs();
-
-WolConfig* create_config(char* broadcast, char* mac, int port);
+typedef struct WolConfigs_t {
+    WolConfig** configs;
+    int capacity;
+    int size;
+} WolConfigs;
 
 void destroy_config(WolConfig* config);
+
+WolConfigs* get_configs();
+
+WolConfigs* create_config_list();
+
+void add_config(WolConfigs* configs, char* broadcast, char* mac, int port);
+
+void destroy_config_list(WolConfigs* configs);
 
 #endif
