@@ -6,9 +6,12 @@ A very basic [Wake-on-LAN](https://en.wikipedia.org/wiki/Wake-on-LAN) client for
 
 * Sending Wake-on-LAN magic packets with a hardcoded MAC address
 
-## Planned Features
+## Features In Dev
 
 * Configurable broadcast address and MAC address through a file 
+
+## Planned Features
+
 * Wake-on-WAN functionality (wake across networks)
 * An icon for the application
 
