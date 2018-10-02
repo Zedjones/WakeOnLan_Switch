@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "alternatives.h"
 #include "config.h"
@@ -11,18 +12,22 @@ WolConfigs* get_configs(){
 
     config_file = fopen(CONFIG_FILE, "r");
 
-    if (config_file != NULL){
+    if (config_file == NULL){
+        printf("Failed to open config file\n");
         return NULL;
     }
 
     char key[10];
     char value[16];
+    bool in_config = false;
 
     while(getline(&line, &len, config_file) != -1){
-        printf("%s\n", line);
-        sscanf(line, "%s: %s", key, value);
-        printf("%s: %s", key, value);
+        sscanf(line, "%[^':']:%s", key, value);
+        printf("key: %s, value: %s\n", key, value);
+
+
     }
+    printf("\n\n\n");
 
     free(line);
 
@@ -43,17 +48,18 @@ WolConfigs* create_config_list(){
     return configs;
 }
 
-WolConfig* create_config(char* broadcast, char* mac, int port){
+WolConfig* create_config(char* broadcast, char* mac, char* name, int port){
     WolConfig* config = malloc(sizeof(WolConfig));
 
     config->broadcast_address = broadcast;
     config->mac_address = mac;
+    config->name = name;
     config->udp_port = port; 
 
     return config;
 }
 
-void add_config(WolConfigs* configs, char* broadcast, char* mac, int port){
+void add_config(WolConfigs* configs, char* broadcast, char* mac, char* name, int port){
 
     int current_capacity = configs->capacity;
     if(configs->size == configs->capacity-1){
@@ -63,7 +69,7 @@ void add_config(WolConfigs* configs, char* broadcast, char* mac, int port){
     }
 
     configs->size++;
-    WolConfig* new_config = create_config(broadcast, mac, port);
+    WolConfig* new_config = create_config(broadcast, mac, name, port);
 
     configs->configs[configs->size] = new_config;
     
@@ -71,6 +77,9 @@ void add_config(WolConfigs* configs, char* broadcast, char* mac, int port){
 
 void destroy_config_list(WolConfigs* configs){
     for(int i = 0; i < configs->size; i++){
+        free(configs->configs[i]->broadcast_address);
+        free(configs->configs[i]->mac_address);
+        free(configs->configs[i]->name);
         free(configs->configs[i]);
     }
     free(configs->configs);
