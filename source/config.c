@@ -17,21 +17,29 @@ WolConfigs* get_configs(){
         return NULL;
     }
 
+    WolConfigs* ret_list = create_config_list();
+
     char key[10];
     char value[16];
     bool in_config = false;
+    WolConfig* new_config;
 
     while(getline(&line, &len, config_file) != -1){
-        sscanf(line, "%[^':']:%s", key, value);
-        printf("key: %s, value: %s\n", key, value);
-
+        if(in_config){
+            sscanf(line, "%[^':']:%s", key, value);
+            printf("key: %s, value: %s\n", key, value);
+        }
+        else{
+            sscanf(line, "[%15[^]]]", value);
+            in_config = true;
+        }
 
     }
     printf("\n\n\n");
 
     free(line);
 
-    return NULL;
+    return ret_list;
 }
 
 WolConfigs* create_config_list(){
