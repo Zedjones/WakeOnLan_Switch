@@ -31,7 +31,12 @@ WolConfigs* get_configs(){
         }
         else{
             sscanf(line, "[%15[^]]]", value);
+            printf("Entering configuration mode.\n");
+            printf("config name: %s\n", value);
             in_config = true;
+        }
+        if(strcmp(key, "broadcast")){
+            
         }
 
     }
