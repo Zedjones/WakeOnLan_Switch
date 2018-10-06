@@ -3,6 +3,14 @@
 
 #include "alternatives.h"
 #include "config.h"
+#include "ini.h"
+
+static int config_handler(void* user, const char* section, const char* name, const char* value){
+
+    WolConfigs* config = (WolConfigs*)user;
+
+    
+}
 
 WolConfigs* get_configs(){
 
@@ -22,10 +30,14 @@ WolConfigs* get_configs(){
     char key[10];
     char value[16];
     bool in_config = false;
+
     WolConfig* new_config;
+    char broadcast[17];
+    char mac[18];
+    char config_name[16];
 
     while(getline(&line, &len, config_file) != -1){
-        if(in_config){
+/*         if(in_config){
             sscanf(line, "%[^':']:%s", key, value);
             printf("key: %s, value: %s\n", key, value);
         }
@@ -35,9 +47,21 @@ WolConfigs* get_configs(){
             printf("config name: %s\n", value);
             in_config = true;
         }
+
         if(strcmp(key, "broadcast")){
-            
+            strcpy(broadcast, value);
         }
+        else if(strcmp(key, "mac")){
+            strcpy(mac, value);
+        }
+        else if(!in_config){
+            strcpy(config_name, value);
+        }
+        else{
+            printf("Error in configuration file.\n");
+            return NULL;
+        }
+        */
 
     }
     printf("\n\n\n");
