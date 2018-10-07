@@ -6,6 +6,9 @@
 #define _CONFIG_HEADER_
 
 #define CONFIG_FILE "/switch/WakeOnLan_Switch/configurations"
+#define MAC_KEY "mac"
+#define BROADCAST_KEY "broadcast"
+#define PORT_KEY "port"
 #define MAX_LINE 1024
 #define STARTING_CAPACITY 5
 
