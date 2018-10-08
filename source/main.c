@@ -52,6 +52,18 @@ int validate_mac_addr(char* mac) {
     return (i == 12 && (s == 5 || s == 0));
 }
 
+void mac_str_to_hex(char* mac, unsigned char* new_mac){
+
+    if(strstr(mac, "-")){
+        sscanf(mac, "%hhx-%hhx-%hhx-%hhx-%hhx-%hhx", 
+               &new_mac[0], &new_mac[1], &new_mac[2], &new_mac[3], &new_mac[4], &new_mac[5]);
+    }
+    else{
+        sscanf(mac, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", 
+               &new_mac[0], &new_mac[1], &new_mac[2], &new_mac[3], &new_mac[4], &new_mac[5]);
+    }
+}
+
 int enter_exit_loop(){
     while (appletMainLoop()) {
         // Scans our controllers for any button presses since the last time this function was called
@@ -76,8 +88,8 @@ int enter_exit_loop(){
 int main(int argc, char **argv)
 {
 
-    unsigned char packet[MAGICPACKET_SIZE];
-    unsigned char mac[6] = {0x90, 0x2b, 0x34, 0x3d, 0x17, 0x8f};
+    //unsigned char packet[MAGICPACKET_SIZE];
+    //unsigned char mac[6] = {0x90, 0x2b, 0x34, 0x3d, 0x17, 0x8f};
     unsigned char** packets;
 
     gfxInitDefault();
@@ -108,7 +120,12 @@ int main(int argc, char **argv)
         packets[i] = malloc(sizeof(char) * MAGICPACKET_SIZE);
     }
 
-    create_magic_packet(mac, packet);
+    for(int i = 0; i <= configs->size; i++){
+        unsigned char new_mac[6];
+        WolConfig* current_config = configs->configs[i];
+        mac_str_to_hex(current_config->mac_address, new_mac);
+        create_magic_packet(new_mac, packets[i]);
+    }
 
     int sock;
     struct sockaddr_in client, server; 
@@ -128,7 +145,7 @@ int main(int argc, char **argv)
     bind(sock, (struct sockaddr*)&client, sizeof(client));
 
     server.sin_family = AF_INET;
-    server.sin_addr.s_addr = inet_addr("192.168.0.255");
+    server.sin_addr.s_addr = inet_addr(configs->configs[0]->broadcast_address);
     server.sin_port = htons(9);
 
     // Main loop
@@ -141,17 +158,9 @@ int main(int argc, char **argv)
         u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
 
         if (kDown & KEY_A){
-            sendto(sock, packet, sizeof(unsigned char) * MAGICPACKET_SIZE, 0, 
+            sendto(sock, packets[0], sizeof(unsigned char) * MAGICPACKET_SIZE, 0, 
                    (struct sockaddr*)&server, sizeof(server));
-            printf("Sending magic packet to ");
-            for(int i = 0; i < 6; i++){
-                if(i == 5){
-                    printf("%x\n", mac[i]);
-                }
-                else{
-                    printf("%x:", mac[i]);      
-                }
-            }
+            printf("Sending magic packet to %s\n", configs->configs[0]->mac_address);
         }
 
         if (kDown & KEY_PLUS) break; // break in order to return to hbmenu
