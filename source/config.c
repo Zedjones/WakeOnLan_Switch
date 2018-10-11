@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "alternatives.h"
 #include "config.h"
 #include "ini.h"
 
